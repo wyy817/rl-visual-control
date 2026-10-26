@@ -4,7 +4,7 @@ Two from-scratch PyTorch implementations of deep reinforcement-learning agents t
 
 | Project | Environment | Algorithm | Result |
 | --- | --- | --- | --- |
-| [`ppo_carracing/`](ppo_carracing/) | Gymnasium `CarRacing-v3` (continuous control) | PPO with a CNN actor–critic, GAE, Gaussian policy, 8 parallel environments | After 2M timesteps: **853.83 ± 55.47** mean reward vs 768.35 ± 181.75 for a Stable-Baselines3 PPO baseline: about 11% higher return and about 3x lower standard deviation |
+| [`ppo_carracing/`](ppo_carracing/) | Gymnasium `CarRacing-v3` (continuous control) | PPO with a CNN actor–critic, GAE, Gaussian policy, 8 parallel environments | After 2M timesteps: **853.83 ± 55.47** mean reward vs 768.35 ± 181.75 for a Stable-Baselines3 PPO baseline: about 11% higher return and about 3x lower standard deviation (sampled-policy evaluation, see note below) |
 | [`dqn_pong/`](dqn_pong/) | Atari `ALE/Pong-v5` | Double DQN with dueling architecture and prioritised experience replay | Trained for 5M environment steps; formal 30-episode evaluation 5.13 ± 5.68 (see the README for how training and evaluation numbers differ) |
 
 ## Highlights
@@ -13,6 +13,10 @@ Two from-scratch PyTorch implementations of deep reinforcement-learning agents t
 - PPO: clipped surrogate objective, generalised advantage estimation, continuous Gaussian policy, vectorised environments.
 - DQN: Double-DQN targets, dueling value / advantage heads, proportional prioritised replay with annealed importance sampling.
 - The PPO training run was launched as a SLURM job on a GPU node (`ppo_carracing/run_ppo.sh`).
+
+## Evaluation note
+
+The PPO figures above come from evaluating the **stochastic policy** (actions sampled from the Gaussian policy), the same way as the Stable-Baselines3 baseline. Evaluating the **deterministic policy** (mean action) gives a much lower mean reward of about 261. `ppo_carracing/evaluate.py` evaluates the deterministic policy by default; pass `--stochastic` to reproduce the sampled-policy numbers. Compare like with like when reproducing results.
 
 ## Running
 
